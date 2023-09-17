@@ -5,24 +5,64 @@ const { Tag, Product, ProductTag } = require('../../models');
 
 router.get('/', (req, res) => {
   // find all tags
+  Tag.findAll({
+    include: [ Product ]
+  }).then((tagData) => {
+    res.json(tagData);
+  })
   // be sure to include its associated Product data
 });
 
 router.get('/:id', (req, res) => {
   // find a single tag by its `id`
+  Tag.findOne({
+    where: {
+      id: req.params.id
+    },
+    include: [ Product ]
+  }).then((tagData) => {
+    res.json(tagData);
+  })
   // be sure to include its associated Product data
 });
 
 router.post('/', (req, res) => {
   // create a new tag
+  Tag.create({
+    id: req.body.id,
+    tag_id: req.body.tag_id,
+  }).then((newTag) => {
+    res.json(newTag);
+  }).catch((err) => {
+    res.json(err);
+  })
 });
 
 router.put('/:id', (req, res) => {
   // update a tag's name by its `id` value
+  Tag.update({
+    id: req.body.id,
+    tag_id: req.body.tag_id,
+  }, {
+    where: {
+      id: req.params.id,
+    },
+  }).then((updatedTag) => {
+    res.json(updatedTag);
+  }).catch((err) => res.json(err));
 });
 
 router.delete('/:id', (req, res) => {
   // delete on tag by its `id` value
+  Tag.destroy({
+    where: {
+      id: req.params.id,
+    },
+  }).then((deletedTag) => {
+    res.json(deletedTag);
+  }).catch((err) => {
+    res.json(err)
+  });
 });
 
 module.exports = router;
